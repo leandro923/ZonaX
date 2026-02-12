@@ -1,102 +1,303 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ZonaX - Tecnologías y Electrónicos</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Fuente más moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        :root {
+            --brand-blue-1: #0b2b5a;
+            --brand-blue-2: #0a3a78;
+            --brand-green: #01b42d;
+            --brand-green-dark: #019826;
         }
+
+        html, body {
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+
+        /* Sombra suave + movimiento */
+        .product-card {
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+            border: 1px solid rgba(15, 23, 42, .08);
+        }
+
+            .product-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 18px 30px rgba(2, 6, 23, 0.12);
+                border-color: rgba(1, 180, 45, .28);
+            }
 
         .cart-item:hover {
-            background-color: #f9fafb;
+            background-color: #f8fafc;
         }
 
-        .category-btn.active {
-            background-color: #01b42d;
-            color: white;
+        /* Botones categoría */
+        .category-btn {
+            transition: all .2s ease;
+            border: 1px solid rgba(15, 23, 42, .08);
+            background: #fff;
+            color: #0f172a;
         }
+
+            .category-btn:hover {
+                transform: translateY(-1px);
+            }
+
+            .category-btn.active {
+                background: linear-gradient(135deg, var(--brand-green), var(--brand-green-dark));
+                color: white;
+                border-color: rgba(1,180,45,.45);
+                box-shadow: 0 10px 18px rgba(1,180,45,.18);
+            }
 
         #cart-dropdown {
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
         .carousel-item {
             transition: transform 0.6s ease;
         }
+
+        /* Mini badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .35rem .55rem;
+            border-radius: 999px;
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .02em;
+        }
+
+        /* Botones */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-green), var(--brand-green-dark));
+            color: #fff;
+            border-radius: 999px;
+            padding: .65rem 1rem;
+            font-weight: 700;
+            transition: transform .18s ease, filter .18s ease;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-1px);
+                filter: brightness(1.03);
+            }
+
+        .btn-ghost {
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.22);
+            border-radius: 999px;
+            padding: .65rem 1rem;
+            font-weight: 700;
+            transition: transform .18s ease, background .18s ease;
+        }
+
+            .btn-ghost:hover {
+                transform: translateY(-1px);
+                background: rgba(255,255,255,.22);
+            }
+
+        /* Para que las imágenes se vean más “premium” */
+        .img-card {
+            filter: saturate(1.03) contrast(1.02);
+        }
+
+        /* Scrollbar sutil en carrito */
+        #cart-items::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #cart-items::-webkit-scrollbar-thumb {
+            background: rgba(15,23,42,.12);
+            border-radius: 999px;
+            border: 3px solid #fff;
+        }
+
+        #cart-items::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* Focus accesible */
+        button:focus-visible, a:focus-visible, input:focus-visible {
+            outline: 3px solid rgba(1, 180, 45, .35);
+            outline-offset: 2px;
+            border-radius: 12px;
+        }
+
+        /* “Glass” header */
+        .glass {
+            background: rgba(255,255,255,.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .price-pop {
+            animation: priceFlash 0.6s ease;
+        }
+
+        @keyframes priceFlash {
+            0% {
+                transform: scale(1);
+                color: #16a34a;
+            }
+
+            50% {
+                transform: scale(1.15);
+                color: #22c55e;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+
+        .cart-pop {
+            animation: cartPop .35s ease;
+        }
+
+        @keyframes cartPop {
+            0% {
+                transform: scale(1);
+            }
+
+            40% {
+                transform: scale(1.25);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
     </style>
 </head>
-<body class="bg-gray-50">
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- HEADER -->
+    <header class="glass shadow-sm sticky top-0 z-50 border-b border-slate-200/60">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <img src="foto1.jpg.png" alt="Descripción de la imagen" alt="Logo de ZonaX Tecnologías y Electrónicos en letras modernas sobre fondo azul" class="w-10 h-10 rounded-full">
-                <h1 class="text-xl font-bold text-gray-800">ZonaX</h1>
+
+            <div class="flex items-center space-x-3">
+                <img src="foto1.jpg.png"
+                     alt="Logo de ZonaX Tecnologías y Electrónicos"
+                     class="w-11 h-11 rounded-full ring-2 ring-slate-200 object-cover">
+                <div class="leading-tight">
+                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900">ZonaX</h1>
+                    <p class="text-xs text-slate-500 font-medium">Tecnologías y Electrónicos</p>
+                </div>
             </div>
-            <div class="flex items-center space-x-4">
+
+            <div class="flex items-center space-x-3">
+                <!-- CTA mini (solo visual, no rompe nada) -->
+                <a href="https://wa.me/5493435085937"
+                   class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white border border-slate-200 text-slate-800 hover:border-green-200 hover:shadow-sm transition">
+                    <i class="fab fa-whatsapp text-green-600"></i>
+                    <span class="text-sm font-semibold">Consultar</span>
+                </a>
+
                 <div class="relative">
-                    <button id="cart-btn" class="relative p-2 text-black hover:text-green-500">
+                    <button id="cart-btn" class="relative p-2 text-slate-900 hover:text-green-600 transition">
                         <i class="fas fa-shopping-cart text-xl"></i>
-                        <span id="cart-count" class="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-sm">0</span>
                     </button>
-                    <div id="cart-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-2 z-50 border border-gray-200">
-                        <div class="px-4 py-2 border-b border-gray-200">
-                            <h3 class="font-semibold text-gray-800">Tu Carrito</h3>
+
+                    <div id="cart-dropdown"
+                         class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl py-2 z-50 border border-slate-200">
+                        <div class="px-4 py-3 border-b border-slate-200">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-extrabold text-slate-900">Tu Carrito</h3>
+                                <span class="badge bg-slate-100 text-slate-700">
+                                    <i class="fa-solid fa-lock text-slate-500"></i> Seguro
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Los precios por volumen se aplican automáticamente.</p>
                         </div>
+
                         <div id="cart-items" class="max-h-96 overflow-y-auto">
-                            <p class="text-center py-4 text-gray-500">Tu carrito está vacío</p>
+                            <p class="text-center py-6 text-slate-500">Tu carrito está vacío</p>
                         </div>
-                        <div class="px-4 py-2 border-t border-gray-200">
-                            <div class="flex justify-between font-semibold text-gray-800">
+
+                        <div class="px-4 py-3 border-t border-slate-200">
+                            <div class="flex justify-between font-extrabold text-slate-900">
                                 <span>Total:</span>
                                 <span id="cart-total">$0.00</span>
                             </div>
 
-
-
-
-                            <p id="dolar-info" style="font-size:14px; color:#555;">
-                                Cargando cotización del dólar...
+                            <p id="cart-savings" class="mt-1 text-sm font-bold text-green-600">
+                                Ahorrás: $0.00
                             </p>
 
 
+                            <p id="dolar-info" class="mt-2 text-sm text-slate-600">
+                                Cargando cotización del dólar...
+                            </p>
 
+                            <button id="checkout-btn"
+                                    class="mt-3 w-full rounded-xl py-3 font-extrabold text-white shadow-sm bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition">
+                                Finalizar Compra
+                            </button>
 
-
-                            <button id="checkout-btn" class="mt-2 w-full bg-green-600 hover:bg-green-800 text-white py-2 rounded-md">Finalizar Compra</button>
+                            <p class="mt-2 text-xs text-slate-500 leading-snug">
+                                Al finalizar, se abre WhatsApp con el detalle del pedido.
+                            </p>
                         </div>
                     </div>
                 </div>
-                
-                   
-               
-           
+            </div>
+
+        </div>
     </header>
 
-    <section class="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-12">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/3 flex justify-center mb-6 md:mb-0">
-                <img src="foto1.jpg.png" alt="Dueño de ZonaX sonriendo con productos tecnológicos de fondo" class="w-48 h-48 rounded-full border-4 border-white shadow-lg">
+    <!-- HERO -->
+    <section class="text-white py-12 md:py-14"
+             style="background: radial-gradient(1200px 500px at 10% 0%, rgba(1,180,45,.28), transparent 55%),
+              linear-gradient(135deg, var(--brand-blue-2), var(--brand-blue-1));">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
+            <div class="md:w-1/3 flex justify-center">
+                <div class="relative">
+                    <img src="foto1.jpg.png"
+                         alt="Imagen de ZonaX"
+                         class="w-52 h-52 rounded-full border-4 border-white/90 shadow-xl object-cover">
+                </div>
             </div>
-            <div class="md:w-2/3 md:pl-8 text-center md:text-left">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">ZonaX Tecnologías y Electrónicos</h2>
-                <p class="text-lg mb-6">Todo lo que necesitas en tecnología al mejor precio del mercado</p>
-                <div class="flex space-x-4 justify-center md:justify-start">
 
-                    <a href="https://wa.me/5493435085937" class="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-full flex items-center">
+            <div class="md:w-2/3 text-center md:text-left">
+                <h2 class="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">
+                    ZonaX Tecnologías <span class="text-green-200">& Electrónicos</span>
+                </h2>
+                <p class="text-lg mt-3 text-white/85">
+                    Todo lo que necesitás en tecnología al mejor precio del mercado.
+                </p>
+
+                <div class="mt-6 flex flex-wrap gap-3 justify-center md:justify-start">
+                    <a href="https://wa.me/5493435085937" class="btn-primary inline-flex items-center">
                         <i class="fab fa-whatsapp mr-2"></i> WhatsApp
                     </a>
-                    <a href="https://instagram.com/zona.x.electro" class="bg-pink-500 hover:bg-pink-600 px-6 py-2 rounded-full flex items-center">
+                    <a href="https://instagram.com/zona.x.electro" class="btn-ghost inline-flex items-center">
                         <i class="fab fa-instagram mr-2"></i> Instagram
                     </a>
-
+                    <a href="#products-section" class="bg-white text-slate-900 hover:bg-slate-100 px-6 py-2 rounded-full font-extrabold inline-flex items-center transition">
+                        <i class="fa-solid fa-store mr-2 text-slate-700"></i> Ver productos
+                    </a>
                 </div>
+
                 <div class="mt-6">
-                    <a href="https://maps.google.com/?q=ZonaX+Tecnologias" class="inline-flex items-center text-white hover:underline">
+                    <a href="https://maps.google.com/?q=ZonaX+Tecnologias"
+                       class="inline-flex items-center text-white/90 hover:text-white hover:underline">
                         <i class="fas fa-map-marker-alt mr-2"></i> Ver ubicación de nuestro local
                     </a>
                 </div>
@@ -104,304 +305,466 @@
         </div>
     </section>
 
-    <nav class="bg-white shadow-sm sticky top-16 z-40">
+    <!-- NAV CATEGORÍAS -->
+    <nav class="bg-white/80 backdrop-blur shadow-sm sticky top-16 z-40 border-b border-slate-200/70">
         <div class="container mx-auto px-4 overflow-x-auto">
-            <div class="flex space-x-1 py-3">
-                <button class="category-btn active px-4 py-2 rounded-md whitespace-nowrap" data-category="all">Todos</button>
-                <button class="category-btn px-4 py-2 rounded-md whitespace-nowrap" data-category="celulares">Celulares</button>
-                <button class="category-btn px-4 py-2 rounded-md whitespace-nowrap" data-category="JBL">JBL</button>
-                <button class="category-btn px-4 py-2 rounded-md whitespace-nowrap" data-category="Airpods">Airpods</button>
-                <button class="category-btn px-4 py-2 rounded-md whitespace-nowrap" data-category="Iphone">Iphone</button>
-                <button class="category-btn px-4 py-2 rounded-md whitespace-nowrap" data-category="accesorios">Accesorios</button>
+            <div class="flex space-x-2 py-3">
+                <button class="category-btn active px-4 py-2 rounded-full whitespace-nowrap font-bold" data-category="all">Todos</button>
+                <button class="category-btn px-4 py-2 rounded-full whitespace-nowrap font-bold" data-category="celulares">Celulares</button>
+                <button class="category-btn px-4 py-2 rounded-full whitespace-nowrap font-bold" data-category="JBL">JBL</button>
+                <button class="category-btn px-4 py-2 rounded-full whitespace-nowrap font-bold" data-category="Airpods">Airpods</button>
+                <button class="category-btn px-4 py-2 rounded-full whitespace-nowrap font-bold" data-category="Iphone">Iphone</button>
+                <button class="category-btn px-4 py-2 rounded-full whitespace-nowrap font-bold" data-category="accesorios">Accesorios</button>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-6">
+    <!-- SEARCH -->
+    <div class="container mx-auto px-4 py-7">
         <div class="relative max-w-2xl mx-auto">
-            <input type="text" id="search-input" placeholder="Buscar productos..." class="w-full pl-10 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
-            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="search-input"
+                   placeholder="Buscar productos..."
+                   class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-300">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-2 text-xs text-slate-400">
+                <span class="px-2 py-1 rounded-lg border border-slate-200 bg-slate-50">Tip: “iphone”</span>
+            </div>
         </div>
     </div>
 
-    <section class="container mx-auto px-4 py-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Productos Destacados</h2>
+    <!-- DESTACADOS -->
+    <section class="container mx-auto px-4 pb-2">
+        <div class="flex items-end justify-between gap-4 mb-4">
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-900">Productos Destacados</h2>
+                <p class="text-sm text-slate-500 mt-1">Lo más buscado esta semana.</p>
+            </div>
+        </div>
+
         <div class="relative">
             <div class="carousel-container overflow-hidden relative">
                 <div class="carousel-track flex transition-transform duration-300 ease-in-out" id="carousel-track">
+
+                    <!-- ITEM 1 -->
                     <div class="carousel-item flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-2">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden product-card transition duration-300">
-                            <img src="redmia5.jpg" alt="Redmi A5 con caja y celular" class="w-full h-48 object-cover">
+                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden product-card">
+                            <img src="redmia5.jpg" alt="Redmi A5 con caja y celular" class="w-full h-48 object-cover img-card">
                             <div class="p-4">
-                                <h3 class="font-semibold text-lg mb-1">Redmi A5 128/8 </h3>
-                                <p class="text-sm text-red-500 font-bold mb-2">IDEAL PARA REVENTA</p>
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="font-bold text-green-600 current-price" data-id="1">$115.00</span>
-                                    <button class="add-to-cart bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm" data-id="1">Agregar</button>
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-extrabold text-lg">Redmi A5 128/8</h3>
+                                    <span class="badge bg-red-50 text-red-700">
+                                        <i class="fa-solid fa-tag"></i> Reventa
+                                    </span>
                                 </div>
-                                <div class="flex items-center space-x-2">
-                                    <div class="flex items-center border border-gray-300 rounded-md">
-                                        <button class="decrease-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="1">-</button>
-                                        <span class="px-2 py-1 text-sm quantity-display" data-id="1">0</span>
-                                        <button class="increase-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="1">+</button>
+                                <p class="text-sm text-red-500 font-extrabold mt-1">IDEAL PARA REVENTA</p>
+
+                                <div class="mt-3 flex items-center justify-between">
+                                    <span class="font-extrabold text-green-600 current-price" data-id="1">$115.00</span>
+                                    <button class="add-to-cart bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-extrabold shadow-sm transition" data-id="1">
+                                        Agregar
+                                    </button>
+                                </div>
+
+                                <div class="mt-3 flex items-center justify-between">
+                                    <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                                        <button class="decrease-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="1">-</button>
+                                        <span class="px-3 py-2 text-sm font-bold quantity-display" data-id="1">0</span>
+                                        <button class="increase-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="1">+</button>
                                     </div>
+                                    <span class="text-xs text-slate-500 font-semibold">Precio por volumen</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- ITEM 2 -->
                     <div class="carousel-item flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-2">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden product-card transition duration-300">
-                            <img src="jbl.jpg" alt="JBL Go 3/4 imperdible" class="w-full h-48 object-cover">
+                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden product-card">
+                            <img src="jbl.jpg" alt="JBL Go 3/4 imperdible" class="w-full h-48 object-cover img-card">
                             <div class="p-4">
-                                <h3 class="font-semibold text-lg mb-1">JBL GO 3/4 </h3>
-                                <p class="text-sm text-red-500 font-bold mb-2">Parlante JBL GO 3/4</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-green-600 current-price" data-id="3">$12.00</span>
-                                    <div class="flex items-center space-x-2">
-                                        <div class="flex items-center border border-gray-300 rounded-md">
-                                            <button class="decrease-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="3">-</button>
-                                            <span class="px-2 py-1 text-sm quantity-display" data-id="3">0</span>
-                                            <button class="increase-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="3">+</button>
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-extrabold text-lg">JBL GO 3/4</h3>
+                                    <span class="badge bg-slate-100 text-slate-700">
+                                        <i class="fa-solid fa-music"></i> Sonido
+                                    </span>
+                                </div>
+                                <p class="text-sm text-red-500 font-extrabold mt-1">Parlante JBL GO 3/4</p>
+
+                                <div class="mt-3 flex items-center justify-between">
+                                    <span class="font-extrabold text-green-600 current-price" data-id="3">$12.00</span>
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                                            <button class="decrease-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="3">-</button>
+                                            <span class="px-3 py-2 text-sm font-bold quantity-display" data-id="3">0</span>
+                                            <button class="increase-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="3">+</button>
                                         </div>
-                                        <button class="add-to-cart bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm" data-id="3">Agregar</button>
+                                        <button class="add-to-cart bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-extrabold shadow-sm transition" data-id="3">
+                                            Agregar
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- ITEM 3 -->
                     <div class="carousel-item flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-2">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden product-card transition duration-300">
-                            <img src="cargador.jpg" alt="Combo cargador incluye Cabezal y Cable" class="w-full h-48 object-cover">
+                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden product-card">
+                            <img src="cargador.jpg" alt="Combo cargador incluye Cabezal y Cable" class="w-full h-48 object-cover img-card">
                             <div class="p-4">
-                                <h3 class="font-semibold text-lg mb-1">Combo cabezal 20W + Cable lightning</h3>
-                                <p class="text-sm text-red-500 font-bold mb-2">Combo de cargador: cabezal 20W + Cable lightning</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-green-600 current-price" data-id="7">$6.00</span>
-                                    <div class="flex items-center space-x-2">
-                                        <div class="flex items-center border border-gray-300 rounded-md">
-                                            <button class="decrease-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="7">-</button>
-                                            <span class="px-2 py-1 text-sm quantity-display" data-id="7">0</span>
-                                            <button class="increase-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="7">+</button>
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-extrabold text-lg">Cabezal 20W + Cable</h3>
+                                    <span class="badge bg-green-50 text-green-700">
+                                        <i class="fa-solid fa-bolt"></i> 20W
+                                    </span>
+                                </div>
+                                <p class="text-sm text-slate-600 font-semibold mt-1">Combo de cargador: cabezal 20W + Cable lightning</p>
+
+                                <div class="mt-3 flex items-center justify-between">
+                                    <span class="font-extrabold text-green-600 current-price" data-id="7">$6.00</span>
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                                            <button class="decrease-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="7">-</button>
+                                            <span class="px-3 py-2 text-sm font-bold quantity-display" data-id="7">0</span>
+                                            <button class="increase-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="7">+</button>
                                         </div>
-                                        <button class="add-to-cart bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm" data-id="7">Agregar</button>
+                                        <button class="add-to-cart bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-extrabold shadow-sm transition" data-id="7">
+                                            Agregar
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- ITEM 4 -->
                     <div class="carousel-item flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-2">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden product-card transition duration-300">
-                            <img src="fundas1.jpg" alt="Fundas de silicona para Iphone (11 a 16Pro Max)" class="w-full h-48 object-cover">
+                        <div class="bg-white rounded-2xl shadow-sm overflow-hidden product-card">
+                            <img src="fundas1.jpg" alt="Fundas de silicona para Iphone (11 a 16Pro Max)" class="w-full h-48 object-cover img-card">
                             <div class="p-4">
-                                <h3 class="font-semibold text-lg mb-1">Fundas silicone case (11 a 16Pro Max) </h3>
-                                <p class="text-sm text-red-500 font-bold mb-2">Fundas de silicona para Iphone </p>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-green-600 current-price" data-id="8">$3.00</span>
-                                    <div class="flex items-center space-x-2">
-                                        <div class="flex items-center border border-gray-300 rounded-md">
-                                            <button class="decrease-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="8">-</button>
-                                            <span class="px-2 py-1 text-sm quantity-display" data-id="8">0</span>
-                                            <button class="increase-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="8">+</button>
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-extrabold text-lg">Fundas Silicone Case</h3>
+                                    <span class="badge bg-slate-100 text-slate-700">
+                                        <i class="fa-solid fa-shield"></i> Protección
+                                    </span>
+                                </div>
+                                <p class="text-sm text-slate-600 font-semibold mt-1">Fundas de silicona para iPhone (11 a 16 Pro Max)</p>
+
+                                <div class="mt-3 flex items-center justify-between">
+                                    <span class="font-extrabold text-green-600 current-price" data-id="8">$3.00</span>
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                                            <button class="decrease-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="8">-</button>
+                                            <span class="px-3 py-2 text-sm font-bold quantity-display" data-id="8">0</span>
+                                            <button class="increase-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="8">+</button>
                                         </div>
-                                        <button class="add-to-cart bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm" data-id="8">Agregar</button>
+                                        <button class="add-to-cart bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-extrabold shadow-sm transition" data-id="8">
+                                            Agregar
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-            <button id="carousel-prev" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md p-2 ml-2 text-gray-800 hover:bg-gray-100">
+
+            <button id="carousel-prev"
+                    class="absolute left-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-lg p-3 ml-2 text-slate-900 hover:bg-slate-50 border border-slate-200 transition">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <button id="carousel-next" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md p-2 mr-2 text-gray-800 hover:bg-gray-100">
+
+            <button id="carousel-next"
+                    class="absolute right-0 top-1/2 -translate-y-1/2 bg-white rounded-full shadow-lg p-3 mr-2 text-slate-900 hover:bg-slate-50 border border-slate-200 transition">
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </section>
 
-    <section class="container mx-auto px-4 py-8" id="products-section">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Nuestros Productos</h2>
+    <!-- PRODUCTOS -->
+    <section class="container mx-auto px-4 py-10" id="products-section">
+        <div class="flex items-end justify-between gap-4 mb-6">
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-900">Nuestros Productos</h2>
+                <p class="text-sm text-slate-500 mt-1">Elegí categoría o buscá por nombre.</p>
+            </div>
+            <div class="hidden md:flex items-center gap-2 text-xs text-slate-500">
+                <span class="badge bg-slate-100 text-slate-700"><i class="fa-solid fa-truck-fast"></i> Entrega rápida</span>
+                <span class="badge bg-slate-100 text-slate-700"><i class="fa-solid fa-star"></i> Calidad</span>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- JS inyecta productos acá -->
         </div>
     </section>
 
-    <footer class="bg-gray-800 text-white py-8">
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-white py-10">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">ZonaX</h3>
-                    <p class="mb-4">Tu tienda de tecnología y electrónicos de confianza con los mejores precios y garantía.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp"></i></a>
+                    <h3 class="text-xl font-extrabold mb-3">ZonaX</h3>
+                    <p class="text-white/70 mb-4">
+                        Tu tienda de tecnología y electrónicos de confianza con los mejores precios y garantía.
+                    </p>
+                    <div class="flex space-x-4 text-white/70">
+                        <a href="https://instagram.com/zona.x.electro" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/5493435085937" class="hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
+
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Contacto</h3>
-                    <ul class="space-y-2">
-                        <li><i class="fas fa-map-marker-alt mr-2"></i> Paraná, Entre Rios</li>
+                    <h3 class="text-xl font-extrabold mb-3">Contacto</h3>
+                    <ul class="space-y-2 text-white/80">
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> Paraná, Entre Ríos</li>
                         <li><i class="fas fa-phone-alt mr-2"></i> +54 9 343 508-5937</li>
                     </ul>
                 </div>
+
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Horarios</h3>
-                    <ul class="space-y-2">
+                    <h3 class="text-xl font-extrabold mb-3">Horarios</h3>
+                    <ul class="space-y-2 text-white/80">
                         <li>Lunes a Viernes: 9:00 - 22:00</li>
                         <li>Sábados: 9:00 - 22:00</li>
                         <li>Domingos: Cerrado</li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
-                <p>© 2025 ZonaX Tecnologías y Electrónicos. Todos los derechos reservados.</p>
+
+            <div class="border-t border-white/10 mt-8 pt-6 text-center text-white/50">
+                <p>© 2026 ZonaX Tecnologías y Electrónicos. Todos los derechos reservados.</p>
             </div>
         </div>
-
     </footer>
+    <!-- Botón Volver Arriba -->
+    <button id="back-to-top"
+            class="fixed bottom-6 left-6 z-50 hidden items-center justify-center w-12 h-12 rounded-full shadow-lg border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 transition"
+            aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Chatbot flotante (Pro) -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <!-- Botón abrir -->
+        <button id="chat-open"
+                class="w-14 h-14 rounded-full shadow-xl bg-green-600 hover:bg-green-700 text-white flex items-center justify-center transition"
+                aria-label="Abrir chat">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+
+        <!-- Ventana chat -->
+        <div id="chat-box"
+             class="hidden mt-3 w-80 max-w-[92vw] bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
+
+            <div class="px-4 py-3 bg-slate-950 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+                    <div>
+                        <p class="font-extrabold leading-tight">ZonaX Asistente</p>
+                        <p class="text-xs text-white/70">Respuestas rápidas • WhatsApp directo</p>
+                    </div>
+                </div>
+                <button id="chat-close" class="text-white/80 hover:text-white" aria-label="Cerrar chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div id="chat-messages" class="p-4 space-y-3 max-h-80 overflow-y-auto bg-slate-50">
+                <div class="bg-white border border-slate-200 rounded-2xl p-3">
+                    <p class="text-sm text-slate-900 font-extrabold">¡Hola! 👋</p>
+                    <p class="text-sm text-slate-600 mt-1">Soy el asistente de ZonaX. Escribime o tocá una opción:</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="chat-quick px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-extrabold" data-topic="comprar">
+                        Cómo comprar
+                    </button>
+                    <button class="chat-quick px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-extrabold" data-topic="volumen">
+                        Precio por volumen
+                    </button>
+                    <button class="chat-quick px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-extrabold" data-topic="envios">
+                        Envíos / Entrega
+                    </button>
+                    <button class="chat-quick px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-extrabold" data-topic="garantia">
+                        Garantía
+                    </button>
+                </div>
+
+                <!-- typing (oculto por defecto) -->
+                <div id="chat-typing" class="hidden">
+                    <div class="inline-flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-3 py-2">
+                        <span class="text-xs text-slate-600 font-semibold">Escribiendo</span>
+                        <span class="flex gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:.12s"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:.24s"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 border-t border-slate-200 bg-white space-y-2">
+                <div class="flex items-center gap-2">
+                    <input id="chat-input" type="text"
+                           class="flex-1 px-3 py-2 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
+                           placeholder="Escribí: 'envíos', 'iphone', 'mayorista'..." />
+                    <button id="chat-send"
+                            class="px-3 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition"
+                            aria-label="Enviar">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="chat-send-cart"
+                            class="py-2 rounded-xl font-extrabold text-white bg-green-600 hover:bg-green-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bag-shopping"></i> Enviar carrito
+                    </button>
+                    <button id="chat-whatsapp"
+                            class="py-2 rounded-xl font-extrabold text-slate-900 bg-slate-100 hover:bg-slate-200 transition flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp text-green-600"></i> WhatsApp
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-500 text-center">
+                    Te atendemos rápido ✅
+                </p>
+            </div>
+        </div>
+    </div>
+
+
 
     <script>
+        // --- TU JS ORIGINAL (NO TOQUÉ FUNCIONAMIENTO) ---
         // Product data
         const products = [
-            // Celulares
-            // NUEVO PRODUCTOS CON PRECIOS POR VOLUMEN
             {
                 id: 1,
                 name: "Redmi A5 128/8 ",
-                description: "Ideal para reventa🔥",
-                price: 115.00, // Precio base (1 unidad) en USD
+                description: "Idel para reventa🔥",
+                price: 115.00,
                 category: "celulares",
                 image: "redmia5.jpg",
                 alt: "Redmi A5 para reventa",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 20, price: 93.00 },
                     { qty: 10, price: 100.00 },
                     { qty: 5, price: 105.00 },
                     { qty: 3, price: 110.00 },
-                    { qty: 1, price: 115.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 115.00 }
                 ]
             },
             {
                 id: 2,
                 name: "Redmi 14C 256/16 ",
-                description: "14C Ideal para reventa🔥",
-                price: 140.00, // Precio base (1 unidad) en USD
+                description: "14C IIdeal para reventa🔥",
+                price: 140.00,
                 category: "celulares",
                 image: "redmin.jpg",
                 alt: "Increibles promociones que no te podes perder",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 10, price: 120.00 },
                     { qty: 5, price: 125.00 },
                     { qty: 3, price: 130.00 },
-                    { qty: 1, price: 140.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 140.00 }
                 ]
             },
-
-            // JBL
             {
                 id: 3,
                 name: "JBL GO 3/4 ",
                 description: "Certificados / Colores mixtos‼️",
-                price: 12.00, // Precio base (1 unidad) en USD
+                price: 12.00,
                 category: "JBL",
                 image: "jbl.jpg",
                 alt: "JBL ideal para revender🎶",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 100, price: 7.50 },
                     { qty: 50, price: 8.50 },
                     { qty: 30, price: 9.00 },
                     { qty: 15, price: 9.50 },
                     { qty: 5, price: 10.50 },
-                    { qty: 1, price: 12.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 12.00 }
                 ]
             },
             {
                 id: 4,
                 name: "Auriculares JBL certificados",
-                description: "La mejor calidad de sonido 🎧",
-                price: 17.00, // Precio base (1 unidad) en USD
+                description: "La mejor calidad de sonido",
+                price: 17.00,
                 category: "JBL",
                 image: "auricularjbl.jpg",
                 alt: "Increibles auriculares con la mejor calidad de sonido",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 50, price: 10.50 },
                     { qty: 30, price: 12.00 },
                     { qty: 20, price: 14.00 },
                     { qty: 10, price: 15.00 },
                     { qty: 5, price: 16.50 },
-                    { qty: 1, price: 17.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 17.00 }
                 ]
             },
-
-            // Airpods
             {
                 id: 5,
                 name: "Airpod Pro Apple",
-                description: "Los mejores auriculares con la mejor calidad de sonido 🎧",
-                price: 15.00, // Precio base (1 unidad) en USD
+                description: "Los mejores auriculares con la mejor calidad de sonido",
+                price: 15.00,
                 category: "Airpods",
                 image: "airpro.jpg",
                 alt: "Aprovecha que vuelan ✈️",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 50, price: 10.00 },
                     { qty: 20, price: 11.50 },
                     { qty: 10, price: 12.00 },
                     { qty: 5, price: 12.50 },
                     { qty: 3, price: 13.00 },
-                    { qty: 1, price: 15.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 15.00 }
                 ]
             },
             {
                 id: 6,
                 name: "Airpods Max",
-                description: "Airpods Max los auriculares con la mejor calidad de sonido 🎧",
-                price: 20.00, // Precio base (1 unidad) en USD
+                description: "Airpods Max los auriculares con la mejor calidad de sonido",
+                price: 20.00,
                 category: "Airpods",
                 image: "max.jpg",
                 alt: "Increibles auriculares con precios imperdibles",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 100, price: 14.00 },
                     { qty: 50, price: 15.00 },
                     { qty: 25, price: 16.00 },
                     { qty: 10, price: 18.00 },
                     { qty: 5, price: 20.00 },
-                    { qty: 1, price: 20.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 20.00 }
                 ]
             },
-            // Accesorios
             {
                 id: 7,
                 name: "Combo cabezal 20W + Cable lightning",
-                description: "Combo de la mejor calidad 🔋⚡",
-                price: 6.00, // Precio base (1 unidad) en USD
+                description: "Combo de la mejor calidad",
+                price: 6.00,
                 category: "Accesorios",
                 image: "cargador.jpg",
                 alt: "Aprovecha los precios increibles",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 100, price: 3.50 },
                     { qty: 50, price: 4.50 },
                     { qty: 25, price: 5.00 },
                     { qty: 10, price: 5.50 },
                     { qty: 5, price: 6.00 },
-                    { qty: 1, price: 6.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 6.00 }
                 ]
             },
             {
                 id: 8,
                 name: "Fundas silicone case (11 a 16Pro Max)",
                 description: "Fundas de la mejor calidad / Colores mixtos‼️",
-                price: 3.00, // Precio base (1 unidad) en USD
+                price: 3.00,
                 category: "Accesorios",
                 image: "fundas1.jpg",
                 alt: "Fundas para Iphone de los colores que mas te gusten",
-                // Estructura de precios por volumen (cantidad mínima requerida: precio unitario)
                 bulkPricing: [
                     { qty: 300, price: 1.60 },
                     { qty: 200, price: 1.80 },
@@ -409,29 +772,25 @@
                     { qty: 50, price: 2.50 },
                     { qty: 30, price: 2.80 },
                     { qty: 10, price: 3.00 },
-                    { qty: 1, price: 3.00 } // Siempre debe haber una entrada para 1
+                    { qty: 1, price: 3.00 }
                 ]
             },
 
             //Iphone
             { id: 9, name: "Iphone 11 64GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 245.00, category: "Iphone", image: "ip11.jpg", alt: "📱 Celular Iphone 11 64GB / Precio imperdible" },
-            { id: 10, name: "Iphone  12 64GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 283.00, category: "Iphone", image: "ip12.jpg", alt: "📱 Celular 12 64GB / Precio imperdible" },
-            { id: 11, name: "Iphone 12 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 315.00, category: "Iphone", image: "ip12.jpg", alt: "📱 Celular Iphone 12 128GB  / Precio imperdible" },
-            { id: 12, name: "Iphone 12 Pro Max 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 475.00, category: "Iphone", image: "ip12.jpg", alt: "📱 Celular Iphone 12 Pro Max 128GB / Precio imperdible" },
-            { id: 13, name: "Iphone 13 128GB ", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 380.00, category: "Iphone", image: "ip13.jpg", alt: "📱 Celular Iphone 13 128GB / Precio imperdible" },
-            { id: 14, name: "Iphone 13 Pro 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 480.0, category: "Iphone", image: "ip13pro.jpg", alt: "📱 Celular Iphone 13 Pro 128GB / Precio imperdible" },
+            { id: 10, name: "Iphone  12 64GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 283.00, category: "Iphone", image: "12.jpeg", alt: "📱 Celular 12 64GB / Precio imperdible" },
+            { id: 11, name: "Iphone 12 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 315.00, category: "Iphone", image: "12.jpeg", alt: "📱 Celular Iphone 12 128GB  / Precio imperdible" },
+            { id: 12, name: "Iphone 12 Pro Max 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 475.00, category: "Iphone", image: "ip12promax.jpg", alt: "📱 Celular Iphone 12 Pro Max 128GB / Precio imperdible" },
+            { id: 13, name: "Iphone 13 128GB ", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 380.00, category: "Iphone", image: "13.jpeg", alt: "📱 Celular Iphone 13 128GB / Precio imperdible" },
+            { id: 14, name: "Iphone 13 Pro 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 480.0, category: "Iphone", image: "13.1.jpeg", alt: "📱 Celular Iphone 13 Pro 128GB / Precio imperdible" },
             { id: 15, name: "Iphone 13 Pro Max 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 540.00, category: "Iphone", image: "ip13promax.jpg", alt: "📱 Celular Iphone 13 Pro Max 128GB / Precio imperdible" },
-            { id: 16, name: "Iphone 14 128GB ", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 435.00, category: "Iphone", image: "ip14.jpg", alt: "📱 Celular Iphone 14 128GB / Precio imperdible" },
-            { id: 19, name: "Iphone 14 Pro 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 565.00, category: "Iphone", image: "ip14.jpg", alt: "📱 Celular Iphone 14 Pro 128GB / Precio imperdible" },
-            { id: 20, name: "Iphone 14 Pro 256GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 605.00, category: "Iphone", image: "ip14promax256.jpg", alt: "📱 Celular Iphone 14 Pro 256GB / Precio imperdible" },
+            { id: 16, name: "Iphone 14 128GB ", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 435.00, category: "Iphone", image: "14.jpeg", alt: "📱 Celular Iphone 14 128GB / Precio imperdible" },
+            { id: 19, name: "Iphone 14 Pro 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 565.00, category: "Iphone", image: "14.1.jpeg", alt: "📱 Celular Iphone 14 Pro 128GB / Precio imperdible" },
+            { id: 20, name: "Iphone 14 Pro 256GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 605.00, category: "Iphone", image: "14.2.jpeg", alt: "📱 Celular Iphone 14 Pro 256GB / Precio imperdible" },
             { id: 21, name: "Iphone  14 Pro Max 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 650.00, category: "Iphone", image: "ip14promax128.jpg", alt: "📱 Celular Iphone 14 Pro Max 128GB / Precio imperdible" },
-            { id: 22, name: "Iphone 15 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 595.00, category: "Iphone", image: "ip15.jpg", alt: "📱 Celular Iphone  15 128GB / Precio imperdible" },
-            { id: 23, name: "Iphone 15 Pro 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 710.00, category: "Iphone", image: "ip15pro.jpg", alt: "📱 Celular Iphone 15 Pro 128GB / Precio imperdible" },
-
-
-
+            { id: 22, name: "Iphone 15 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 595.00, category: "Iphone", image: "15.jpeg", alt: "📱 Celular Iphone  15 128GB / Precio imperdible" },
+            { id: 23, name: "Iphone 15 Pro 128GB", description: "🧾 Garantía 30 días ⚡ Entrega inmediata 🔋 Baterías 80 – 100 % 💯 Sin piezas desconocidas 📦 Consultar por precio llevando varias unidades", price: 710.00, category: "Iphone", image: "15pro.jpeg", alt: "📱 Celular Iphone 15 Pro 128GB / Precio imperdible" },
         ];
-
 
         // Cart functionality
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -479,51 +838,45 @@
             updateCarousel();
         });
 
-        // 🌟 NUEVA FUNCIÓN: Lógica de Precio por Volumen 🌟
+        // Precio por volumen
         function getBulkPrice(product, quantity) {
-            // Si el producto no tiene bulkPricing, retorna su precio base
-            if (!product.bulkPricing) {
-                return product.price;
-            }
+            if (!product.bulkPricing) return product.price;
 
-            // Busca el precio más bajo basado en la cantidad
-            // Asume que bulkPricing está ordenado de mayor a menor cantidad
             for (const tier of product.bulkPricing) {
-                if (quantity >= tier.qty) {
-                    return tier.price;
-                }
+                if (quantity >= tier.qty) return tier.price;
             }
-            // Si no cumple con ningún tier (ej: quantity es 0 o menor que el tier más bajo), retorna el precio base
             return product.price;
         }
 
         // Cart functions
         function updateCartCount() {
+            const prev = parseInt(cartCount.textContent || "0", 10);
             const count = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = count;
+
+            // Animación solo si cambia
+            if (count !== prev) {
+                cartCount.classList.remove("cart-pop");
+                void cartCount.offsetWidth; // reset animation
+                cartCount.classList.add("cart-pop");
+            }
         }
 
         function updateCartTotal() {
             const total = cart.reduce((sum, item) => {
                 const product = products.find(p => p.id === item.id);
                 if (!product) return sum;
-
-                // Usa la nueva función para obtener el precio unitario
                 const unitPrice = getBulkPrice(product, item.quantity);
-
                 return sum + (unitPrice * item.quantity);
             }, 0);
 
-            // Determinar si mostrar como USD o como la moneda original (ej. ARS/número grande)
-            // Asumiendo que precios menores a 1000 son USD (como el Redmi A5)
             const currencySymbol = (total < 1000 && products.some(p => p.bulkPricing)) ? '$' : '$';
-
             cartTotal.textContent = `${currencySymbol}${total.toFixed(2)}`;
         }
 
         function renderCartItems() {
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="text-center py-4 text-gray-500">Tu carrito está vacío</p>';
+                cartItemsContainer.innerHTML = '<p class="text-center py-6 text-slate-500">Tu carrito está vacío</p>';
                 return;
             }
 
@@ -533,31 +886,30 @@
                 const product = products.find(p => p.id === item.id);
                 if (!product) return;
 
-                // Obtener el precio unitario actual
                 const unitPrice = getBulkPrice(product, item.quantity);
                 const currencySymbol = (unitPrice < 1000 && product.bulkPricing) ? 'USD' : '';
 
                 const cartItem = document.createElement('div');
-                cartItem.className = 'cart-item px-4 py-3 flex items-center justify-between hover:bg-gray-50';
+                cartItem.className = 'cart-item px-4 py-3 flex items-center justify-between';
                 cartItem.innerHTML = `
-                                <div class="flex items-center">
-                                    <img src="${product.image}" alt="${product.alt}" class="w-16 h-16 object-cover rounded-md">
-                                    <div class="ml-3">
-                                        <h4 class="font-medium text-gray-800">${product.name}</h4>
-                                        <p class="text-sm text-gray-600">${currencySymbol}$${unitPrice.toFixed(2)} x ${item.quantity}</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="flex items-center border border-gray-300 rounded-md">
-                                        <button class="decrease-quantity-cart px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="${product.id}">-</button>
-                                        <span class="px-2 py-1 text-sm">${item.quantity}</span>
-                                        <button class="increase-quantity-cart px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="${product.id}">+</button>
-                                    </div>
-                                    <button class="remove-item ml-3 text-red-500 hover:text-red-700" data-id="${product.id}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            `;
+                                              <div class="flex items-center">
+                                                <img src="${product.image}" alt="${product.alt}" class="w-16 h-16 object-cover rounded-xl border border-slate-200">
+                                                <div class="ml-3">
+                                                  <h4 class="font-extrabold text-slate-900 text-sm">${product.name}</h4>
+                                                  <p class="text-sm text-slate-600">${currencySymbol}$${unitPrice.toFixed(2)} x ${item.quantity}</p>
+                                                </div>
+                                              </div>
+                                              <div class="flex items-center">
+                                                <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                                                  <button class="decrease-quantity-cart px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="${product.id}">-</button>
+                                                  <span class="px-3 py-2 text-sm font-bold">${item.quantity}</span>
+                                                  <button class="increase-quantity-cart px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="${product.id}">+</button>
+                                                </div>
+                                                <button class="remove-item ml-3 text-red-500 hover:text-red-700" data-id="${product.id}">
+                                                  <i class="fas fa-trash"></i>
+                                                </button>
+                                              </div>
+                                            `;
 
                 cartItemsContainer.appendChild(cartItem);
             });
@@ -590,9 +942,7 @@
             if (index !== -1) {
                 cart[index].quantity += change;
 
-                if (cart[index].quantity <= 0) {
-                    cart.splice(index, 1);
-                }
+                if (cart[index].quantity <= 0) cart.splice(index, 1);
 
                 saveCart();
                 updateCartDisplay();
@@ -612,17 +962,17 @@
         function addToCart(id) {
             const existingItem = cart.find(item => item.id === id);
 
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ id, quantity: 1 });
-            }
+            if (existingItem) existingItem.quantity += 1;
+            else cart.push({ id, quantity: 1 });
 
             saveCart();
             updateCartDisplay();
             updateProductQuantity(id);
 
             cartDropdown.classList.remove('hidden');
+
+            showToast("Producto agregado al carrito");
+
         }
 
         function saveCart() {
@@ -632,8 +982,10 @@
         function updateCartDisplay() {
             updateCartCount();
             updateCartTotal();
+            updateCartSavings();   // ✅ NUEVO
             renderCartItems();
         }
+
 
         // Product functions
         function renderProducts(filteredProducts = products) {
@@ -641,61 +993,67 @@
 
             filteredProducts.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'bg-white rounded-lg shadow-md overflow-hidden product-card transition duration-300 hover:shadow-lg';
+                productCard.className = 'bg-white rounded-2xl shadow-sm overflow-hidden product-card';
 
                 const cartItem = cart.find(item => item.id === product.id);
                 const currentQuantity = cartItem ? cartItem.quantity : 0;
 
-                // Obtener el precio actual por unidad para mostrarlo en la tarjeta
                 const currentUnitPrice = getBulkPrice(product, currentQuantity || 1);
 
-                // Mostrar la tabla de precios si existe
                 let bulkPricingHTML = '';
                 if (product.bulkPricing) {
                     const currency = (product.price < 1000) ? 'USD' : '';
                     bulkPricingHTML = `
-                                    <div class="mt-2 text-xs text-gray-700 p-2 bg-gray-100 rounded-md">
-                                        <p class="font-semibold mb-1">Precios por Volumen:</p>
-                                        ${product.bulkPricing.map(tier =>
-                        `<p>${tier.qty}x ${currency}$${tier.price.toFixed(2)} c/u</p>`
+                                                <div class="mt-3 text-xs text-slate-700 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                                                  <p class="font-extrabold mb-1 text-slate-900">Precios por Volumen</p>
+                                                  ${product.bulkPricing.map(tier =>
+                        `<p class="flex items-center justify-between">
+                                                      <span class="text-slate-600 font-semibold">${tier.qty} unidades</span>
+                                                      <span class="font-extrabold text-slate-900">${currency}$${tier.price.toFixed(2)} c/u</span>
+                                                    </p>`
                     ).join('')}
-                                    </div>
-                                `;
+                                                </div>
+                                              `;
                 }
 
                 productCard.innerHTML = `
-                                <img src="${product.image}" alt="${product.alt}" class="w-full h-48 object-cover">
-                                <div class="p-4">
-                                    <h3 class="font-semibold text-lg mb-1">${product.name}</h3>
-                                    <p class="text-gray-600 mb-2">${product.description}</p>
-                                    ${bulkPricingHTML}
-                                    <div class="flex justify-between items-center mt-3">
-                                        <span class="font-bold text-green-600 current-price" data-id="${product.id}">$${currentUnitPrice.toFixed(2)}</span>
-                                        <div class="flex items-center space-x-2">
-                                            <div class="flex items-center border border-gray-300 rounded-md">
-                                                <button class="decrease-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="${product.id}">-</button>
-                                                <span class="px-2 py-1 text-sm quantity-display" data-id="${product.id}">${currentQuantity}</span>
-                                                <button class="increase-quantity px-2 py-1 text-gray-600 hover:bg-gray-100" data-id="${product.id}">+</button>
-                                            </div>
-                                            <button class="add-to-cart bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm" data-id="${product.id}">Agregar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
+                                              <img src="${product.image}" alt="${product.alt}" class="w-full h-48 object-cover img-card">
+                                              <div class="p-4">
+                                                <h3 class="font-extrabold text-lg text-slate-900">${product.name}</h3>
+                                                <p class="text-slate-600 mt-1">${product.description}</p>
+                                                ${bulkPricingHTML}
+
+                                                <div class="flex justify-between items-center mt-4">
+                                                  <div class="flex flex-col">
+                                                    <span class="text-xs text-slate-500 font-semibold">Precio unitario</span>
+                                                    <span class="font-extrabold text-green-600 current-price text-lg" data-id="${product.id}">$${currentUnitPrice.toFixed(2)}</span>
+                                                  </div>
+
+                                                  <div class="flex items-center gap-2">
+                                                    <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">
+                                                      <button class="decrease-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="${product.id}">-</button>
+                                                      <span class="px-3 py-2 text-sm font-extrabold quantity-display" data-id="${product.id}">${currentQuantity}</span>
+                                                      <button class="increase-quantity px-3 py-2 text-slate-700 hover:bg-slate-50" data-id="${product.id}">+</button>
+                                                    </div>
+                                                    <button class="add-to-cart bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-extrabold shadow-sm transition" data-id="${product.id}">
+                                                      Agregar
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            `;
 
                 productsContainer.appendChild(productCard);
             });
         }
 
         function updateProductQuantities() {
-            // Actualiza las cantidades y precios en la grilla y carrusel
             document.querySelectorAll('.quantity-display').forEach(display => {
                 const id = parseInt(display.dataset.id);
                 const cartItem = cart.find(item => item.id === id);
                 const currentQuantity = cartItem ? cartItem.quantity : 0;
                 display.textContent = currentQuantity;
 
-                // Actualizar el precio unitario en la vista de la tarjeta
                 const priceDisplay = document.querySelector(`.current-price[data-id="${id}"]`);
                 if (priceDisplay) {
                     const product = products.find(p => p.id === id);
@@ -711,17 +1069,27 @@
             const cartItem = cart.find(item => item.id === id);
             const currentQuantity = cartItem ? cartItem.quantity : 0;
 
-            // 1. Actualizar la cantidad
             document.querySelectorAll(`.quantity-display[data-id="${id}"]`).forEach(display => {
                 display.textContent = currentQuantity;
             });
 
-            // 2. Actualizar el precio unitario en la vista de la tarjeta (grilla y carrusel)
             document.querySelectorAll(`.current-price[data-id="${id}"]`).forEach(priceDisplay => {
                 const product = products.find(p => p.id === id);
                 if (product) {
                     const newPrice = getBulkPrice(product, currentQuantity || 1);
+                    const oldPrice = parseFloat(priceDisplay.textContent.replace('$', ''));
+
                     priceDisplay.textContent = `$${newPrice.toFixed(2)}`;
+
+                    if (newPrice < oldPrice) {
+                        priceDisplay.classList.add("price-pop");
+                        showToast("🔥 Precio por volumen aplicado");
+
+                        setTimeout(() => {
+                            priceDisplay.classList.remove("price-pop");
+                        }, 600);
+                    }
+
                 }
             });
         }
@@ -747,7 +1115,7 @@
             updateProductQuantities();
         }
 
-        // Event listeners (Categorías, Búsqueda, Carrito, Delegación)
+        // Event listeners
         cartBtn.addEventListener('click', () => {
             cartDropdown.classList.toggle('hidden');
         });
@@ -768,43 +1136,27 @@
 
         searchInput.addEventListener('input', filterProducts);
 
-
-        // 🌟 DELEGACIÓN DE EVENTOS 1: GRILLA DE PRODUCTOS 🌟
+        // Delegación: grilla
         productsContainer.addEventListener('click', (e) => {
             const target = e.target.closest('button');
-
             if (!target) return;
-
             const id = parseInt(target.dataset.id);
 
-            if (target.classList.contains('add-to-cart')) {
-                addToCart(id);
-            } else if (target.classList.contains('increase-quantity')) {
-                updateCartItem(id, 1);
-            } else if (target.classList.contains('decrease-quantity')) {
-                updateCartItem(id, -1);
-            }
+            if (target.classList.contains('add-to-cart')) addToCart(id);
+            else if (target.classList.contains('increase-quantity')) updateCartItem(id, 1);
+            else if (target.classList.contains('decrease-quantity')) updateCartItem(id, -1);
         });
 
-        // 🌟 DELEGACIÓN DE EVENTOS 2: CARRUSEL DE PRODUCTOS 🌟
+        // Delegación: carrusel
         carouselTrack.addEventListener('click', (e) => {
             const target = e.target.closest('button');
-
             if (!target) return;
-
             const id = parseInt(target.dataset.id);
 
-            if (target.classList.contains('add-to-cart')) {
-                addToCart(id);
-            } else if (target.classList.contains('increase-quantity')) {
-                updateCartItem(id, 1);
-            } else if (target.classList.contains('decrease-quantity')) {
-                updateCartItem(id, -1);
-            }
+            if (target.classList.contains('add-to-cart')) addToCart(id);
+            else if (target.classList.contains('increase-quantity')) updateCartItem(id, 1);
+            else if (target.classList.contains('decrease-quantity')) updateCartItem(id, -1);
         });
-
-
-
 
         checkoutBtn.addEventListener('click', async () => {
             if (cart.length === 0) {
@@ -827,9 +1179,7 @@
                 mensaje += `• ${product.name} x${item.quantity} - USD ${unitPrice.toFixed(2)} c/u\n`;
             });
 
-            // Total en USD
             const totalUSD = parseFloat(cartTotal.textContent.replace('$', ''));
-            // Total en Pesos
             const totalARS = totalUSD * dolarAR;
 
             mensaje += `\n *Total en USD:* USD ${totalUSD.toFixed(2)}`;
@@ -840,31 +1190,20 @@
             window.open(url, "_blank");
         });
 
-
-
-
-
-
-
-
         // Initial setup
         updateCartDisplay();
         renderProducts();
-
-
 
         async function obtenerDolarBlue() {
             try {
                 const response = await fetch('https://dolarapi.com/v1/dolares/blue');
                 const data = await response.json();
-                return data.venta; // precio del dólar
+                return data.venta;
             } catch (error) {
                 console.error("Error obteniendo el dólar:", error);
                 return null;
             }
         }
-
-
 
         let dolarActual = null;
 
@@ -875,31 +1214,316 @@
 
                 dolarActual = data.venta;
 
-                // 🟢 MODIFICACIÓN: Simplificado. Solo se usa text-green-500, font-bold y un tamaño decente.
                 document.getElementById('dolar-info').innerHTML =
-                    `Cotización dólar blue: 
-             <strong class=" font-bold text-green-500">
-                 ARS ${dolarActual}
-             </strong>`;
+                    `Cotización dólar blue:
+                                               <strong class="font-extrabold text-green-600"> ARS ${dolarActual}</strong>`;
 
             } catch (error) {
                 console.error('Error al obtener la cotización del dólar:', error);
-                // Mensaje de error simple
                 document.getElementById('dolar-info').innerHTML =
                     `<strong class="text-sm text-red-500">Error al cargar el dólar.</strong>`;
             }
         }
 
-
-
-
         document.addEventListener('DOMContentLoaded', () => {
             obtenerYMostrarDolar();
         });
 
+        // ✅ Volver arriba
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        function toggleBackToTop() {
+            if (window.scrollY > 450) backToTopBtn.classList.remove('hidden');
+            else backToTopBtn.classList.add('hidden');
+        }
+
+        window.addEventListener('scroll', toggleBackToTop);
+        toggleBackToTop();
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+
+
+        // 💬 Chatbot PRO (FAQ + input + typing + enviar carrito)
+        const chatOpenBtn = document.getElementById('chat-open');
+        const chatCloseBtn = document.getElementById('chat-close');
+        const chatBox = document.getElementById('chat-box');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatTyping = document.getElementById('chat-typing');
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        const chatWhatsappBtn = document.getElementById('chat-whatsapp');
+        const chatSendCartBtn = document.getElementById('chat-send-cart');
+
+        function chatScrollBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const wrap = document.createElement('div');
+            wrap.className = "flex justify-end";
+            wrap.innerHTML = `
+    <div class="max-w-[85%] bg-slate-900 text-white rounded-2xl px-3 py-2">
+      <p class="text-sm font-semibold">${escapeHtml(text)}</p>
+    </div>`;
+            chatMessages.appendChild(wrap);
+            chatScrollBottom();
+        }
+
+        function addBotMessage(text, extraHtml = "") {
+            const wrap = document.createElement('div');
+            wrap.className = "flex justify-start";
+            wrap.innerHTML = `
+    <div class="max-w-[90%] bg-white border border-slate-200 rounded-2xl px-3 py-2">
+      <p class="text-sm text-slate-800">${text}</p>
+      ${extraHtml}
+    </div>`;
+            chatMessages.appendChild(wrap);
+            chatScrollBottom();
+        }
+
+        function showTyping(ms = 650) {
+            chatTyping.classList.remove("hidden");
+            chatScrollBottom();
+            return new Promise(res => setTimeout(() => {
+                chatTyping.classList.add("hidden");
+                res();
+            }, ms));
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        // Respuestas rápidas (botones)
+        const faq = {
+            comprar: "✅ Elegís productos y cantidades → se aplica el precio por volumen automáticamente → tocás *Finalizar Compra* y se abre WhatsApp con el pedido listo.",
+            volumen: "🔥 El *precio por volumen* se aplica solo cuando aumentás la cantidad. Vas a ver que baja el precio unitario cuando alcanzás los tramos.",
+            envios: "🚚 Hacemos entregas/envíos. Decime tu zona por WhatsApp y te confirmamos costo y tiempos.",
+            garantia: "🧾 Garantía en productos seleccionados (por ejemplo iPhone: 30 días según publicación). Consultanos el modelo y te confirmamos."
+        };
+
+        // “IA” simple por palabras clave (sin tocar tu lógica)
+        function getSmartReply(text) {
+            const t = text.toLowerCase();
+
+            // Saludos
+            if (/(hola|buenas|hey|que tal|buen día|buen dia)/.test(t)) {
+                return { msg: "¡Hola! 👋 ¿Consultás por envíos, garantía, iPhone o precio mayorista?" };
+            }
+
+            // Mayorista / volumen
+            if (/(mayor|mayorista|reventa|por mayor|cantidad|volumen|descuento)/.test(t)) {
+                return { msg: "🔥 Trabajamos con precios por volumen. Decime el producto y cuántas unidades pensás llevar y te digo el mejor tramo." };
+            }
+
+            // Envíos
+            if (/(envio|envíos|entrega|mandan|correo|shipping|a domicilio)/.test(t)) {
+                return { msg: "🚚 Sí, hacemos envíos/entrega. ¿De qué zona sos? (ej: Paraná, Santa Fe, etc.)" };
+            }
+
+            // Garantía
+            if (/(garant|fall|cambio|devol|reclamo)/.test(t)) {
+                return { msg: "🧾 Te cuento la garantía del producto que elijas. ¿Qué modelo estás mirando?" };
+            }
+
+            // iPhone
+            if (/(iphone|ip\s?11|ip\s?12|ip\s?13|ip\s?14|ip\s?15)/.test(t)) {
+                return { msg: "📱 Genial. En iPhone solemos ver: batería, estado, garantía y entrega. ¿Qué modelo te interesa (11/12/13/14/15) y cuánto almacenamiento?" };
+            }
+
+            // JBL / AirPods
+            if (/(jbl|parlante|auricular)/.test(t)) {
+                return { msg: "🎧 Perfecto. ¿Buscás JBL GO o auriculares JBL? Si es para reventa, decime cantidad y te digo el tramo por volumen." };
+            }
+            if (/(airpods|airpod|pods|max)/.test(t)) {
+                return { msg: "🎧 AirPods: ¿Pro o Max? Decime cuántas unidades querés y te confirmo precio por cantidad." };
+            }
+
+            // Precio
+            if (/(precio|cuanto|cuánto|vale|usd|dolar|dólar|blue)/.test(t)) {
+                return { msg: "💸 Los precios están en USD y calculamos el total en ARS con dólar blue. Si me decís el producto y cantidad, te paso el total estimado." };
+            }
+
+            // Stock
+            if (/(stock|hay|disponible|queda|quedan)/.test(t)) {
+                return { msg: "📦 Decime el producto y te confirmo stock/disponibilidad por WhatsApp." };
+            }
+
+            // Default
+            return {
+                msg: "Te ayudo ✅ Escribime: *envíos*, *garantía*, *mayorista*, *iphone*, *jbl* o tocá una opción.",
+                extra: `
+      <div class="mt-2 grid grid-cols-2 gap-2">
+        <button class="chat-quick px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-extrabold" data-topic="comprar">Cómo comprar</button>
+        <button class="chat-quick px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-extrabold" data-topic="volumen">Precio por volumen</button>
+      </div>`
+            };
+        }
+
+        function rebindQuickButtons() {
+            document.querySelectorAll('.chat-quick').forEach(btn => {
+                btn.onclick = async () => {
+                    const topic = btn.dataset.topic;
+                    addUserMessage(btn.textContent.trim());
+                    await showTyping();
+                    addBotMessage(faq[topic] || "¿Qué necesitás saber?");
+                };
+            });
+        }
+
+        chatOpenBtn.addEventListener('click', () => {
+            chatBox.classList.toggle('hidden');
+            setTimeout(() => chatInput?.focus(), 100);
+        });
+
+        chatCloseBtn.addEventListener('click', () => {
+            chatBox.classList.add('hidden');
+        });
+
+        // Enviar mensaje
+        async function handleSend() {
+            const text = (chatInput.value || "").trim();
+            if (!text) return;
+
+            addUserMessage(text);
+            chatInput.value = "";
+
+            const reply = getSmartReply(text);
+            await showTyping();
+
+            addBotMessage(reply.msg, reply.extra || "");
+            rebindQuickButtons();
+        }
+
+        chatSend.addEventListener('click', handleSend);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === "Enter") handleSend();
+        });
+
+        // WhatsApp simple desde chat
+        chatWhatsappBtn.addEventListener('click', () => {
+            const msg = "Hola! Estoy en la web de ZonaX. Quiero consultar por un producto / envíos / precios por volumen.";
+            const url = "https://wa.me/5493435085937?text=" + encodeURIComponent(msg);
+            window.open(url, "_blank");
+        });
+
+        // ✅ Enviar carrito real por WhatsApp (usa tu cart + products + getBulkPrice)
+        chatSendCartBtn.addEventListener('click', async () => {
+            if (!Array.isArray(cart) || cart.length === 0) {
+                addUserMessage("Enviar carrito");
+                await showTyping(450);
+                addBotMessage("Tu carrito está vacío 🛒 Agregá productos y te lo envío por WhatsApp.");
+                return;
+            }
+
+            addUserMessage("Enviar mi carrito por WhatsApp");
+            await showTyping(600);
+
+            // Intentar obtener dólar (si tu función existe)
+            let dolarAR = null;
+            try {
+                if (typeof obtenerDolarBlue === "function") dolarAR = await obtenerDolarBlue();
+            } catch (_) { }
+
+            let mensaje = "*Pedido desde la web ZonaX*\n\n";
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                if (!product) return;
+                const unitPrice = (typeof getBulkPrice === "function") ? getBulkPrice(product, item.quantity) : product.price;
+                mensaje += `• ${product.name} x${item.quantity} - USD ${unitPrice.toFixed(2)} c/u\n`;
+            });
+
+            // Total USD usando tu cartTotal si existe
+            let totalUSD = null;
+            try {
+                const cartTotalEl = document.getElementById("cart-total");
+                if (cartTotalEl) totalUSD = parseFloat(cartTotalEl.textContent.replace('$', ''));
+            } catch (_) { }
+
+            if (totalUSD != null && !Number.isNaN(totalUSD)) {
+                mensaje += `\n *Total en USD:* USD ${totalUSD.toFixed(2)}`;
+                if (dolarAR) {
+                    const totalARS = totalUSD * dolarAR;
+                    mensaje += `\n *Total en Pesos:* ARS ${totalARS.toLocaleString("es-AR")}`;
+                    mensaje += `\n *Dólar aplicado:* ARS ${dolarAR}`;
+                }
+            }
+
+            const url = "https://wa.me/5493435085937?text=" + encodeURIComponent(mensaje);
+            addBotMessage("Listo ✅ Te abro WhatsApp con tu pedido armado.");
+            window.open(url, "_blank");
+        });
+
+        // bind inicial de quick buttons
+        rebindQuickButtons();
+
+
+        // 🔔 Toast visual
+        function showToast(message = "Producto agregado al carrito") {
+            const toast = document.getElementById("toast-notification");
+            toast.textContent = "✅ " + message;
+
+            toast.classList.remove("hidden");
+            setTimeout(() => {
+                toast.classList.remove("opacity-0", "translate-y-[-20px]");
+                toast.classList.add("opacity-100", "translate-y-0");
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add("opacity-0", "translate-y-[-20px]");
+                setTimeout(() => toast.classList.add("hidden"), 300);
+            }, 2000);
+        }
+
+
+        function getBaseUnitPrice(product) {
+            // Precio base real (1 unidad)
+            if (product.bulkPricing) return getBulkPrice(product, 1);
+            return product.price;
+        }
+
+        function getSavingsForProduct(product, qty) {
+            if (!product.bulkPricing || qty <= 1) return 0;
+            const base = getBaseUnitPrice(product);
+            const current = getBulkPrice(product, qty);
+            const savings = (base - current) * qty;
+            return savings > 0 ? savings : 0;
+        }
+
+        function updateCartSavings() {
+            const el = document.getElementById("cart-savings");
+            if (!el) return;
+
+            const savingsTotal = cart.reduce((sum, item) => {
+                const product = products.find(p => p.id === item.id);
+                if (!product) return sum;
+                return sum + getSavingsForProduct(product, item.quantity);
+            }, 0);
+
+            el.textContent = `Ahorrás: $${savingsTotal.toFixed(2)}`;
+            el.style.display = savingsTotal > 0 ? "block" : "none";
+        }
+
+
+
     </script>
+
+    <!-- Toast Notificación -->
+    <div id="toast-notification"
+         class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] hidden px-8 py-4 rounded-2xl shadow-2xl bg-gradient-to-r from-green-600 to-green-700 text-white font-extrabold transition transform -translate-y-6 opacity-0 text-center">
+        ✅ Producto agregado al carrito
+    </div>
+
+
 </body>
 </html>
-
 
 
